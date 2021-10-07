@@ -31,7 +31,7 @@ functions:
 
 resources:
   Resources:
-    CandidatesDynamoDbTable:
+    OffersDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
@@ -62,7 +62,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-    CandidatesEmailDynamoDbTable:
+    LocationsEmailDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
