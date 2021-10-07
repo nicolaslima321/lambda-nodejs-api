@@ -34,6 +34,14 @@ functions:
       - http: 
           path: offer
           method: get
+  createOffers:
+    handler: api/offer.create
+    memorySize: 128
+    description: Create offers for Brands
+    events:
+      - http: 
+          path: offer
+          method: post
           private: true
 
 resources:
