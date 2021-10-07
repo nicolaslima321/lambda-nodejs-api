@@ -1,4 +1,4 @@
-service: offer
+service: offer-service
 
 frameworkVersion: '2'
 
@@ -6,7 +6,86 @@ provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
+  stage: dev
+  region: us-east-1
+  environment:
+    DEFAULT_UUID: "3693ac7e-3e2b-432c-8c60-2b786453ca9b"
+    OFFER_TABLE: "offer-dev"
+    LOCATION_TABLE: "location-dev"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "*"
 
 functions:
   hello:
-    handler: handler.hello
+    handler: api/handler.hello
+
+resources:
+  Resources:
+    CandidatesDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.CANDIDATE_TABLE}
+        AttributeDefinitions:
+          -
+            AttributeName: "id"
+            AttributeType: "S" 
+          -
+            AttributeName: "brandId"
+            AttributeType: "S"
+        KeySchema:
+          -
+            AttributeName: "id"
+            KeyType: "HASH"
+        GlobalSecondaryIndexes:
+          -
+            IndexName: "brandIdIndex"
+            KeySchema:
+              -
+                AttributeName: "brandId"
+                KeyType: "HASH"
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    CandidatesEmailDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.CANDIDATE_EMAIL_TABLE}
+        AttributeDefinitions:
+          -
+            AttributeName: "id"
+            AttributeType: "S" 
+          -
+            AttributeName: "brandId"
+            AttributeType: "S"
+        KeySchema:
+          -
+            AttributeName: "id"
+            KeyType: "HASH"
+        GlobalSecondaryIndexes:
+          -
+            IndexName: "brandIdIndex"
+            KeySchema:
+              -
+                AttributeName: "brandId"
+                KeyType: "HASH"
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
