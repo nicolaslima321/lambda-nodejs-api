@@ -31,7 +31,7 @@ resources:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
-        TableName: ${self:provider.environment.CANDIDATE_TABLE}
+        TableName: ${self:provider.environment.OFFER_TABLE}
         AttributeDefinitions:
           -
             AttributeName: "id"
@@ -62,7 +62,7 @@ resources:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
-        TableName: ${self:provider.environment.CANDIDATE_EMAIL_TABLE}
+        TableName: ${self:provider.environment.LOCATION_TABLE}
         AttributeDefinitions:
           -
             AttributeName: "id"
