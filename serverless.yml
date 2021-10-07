@@ -28,6 +28,13 @@ provider:
 functions:
   hello:
     handler: api/handler.hello
+    memorySize: 128
+    description: Hello world
+    events:
+      - http: 
+          path: offer
+          method: get
+          private: true
 
 resources:
   Resources:
@@ -62,7 +69,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-    LocationsEmailDynamoDbTable:
+    LocationsDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
