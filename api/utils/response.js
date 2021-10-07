@@ -1,4 +1,4 @@
-export function mountedResponse(body, status) {
+module.exports = function mountedResponse(body, status) {
   return {
     statusCode: status,
     body: JSON.stringify(body),
