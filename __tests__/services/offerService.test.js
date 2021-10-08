@@ -214,6 +214,8 @@ describe('Test OfferService >', () => {
         `OfferService@linkToLocation: An error ocurred to link offer #${offer.id} to location #${location.id}`,
         rejectionObject
       );
+
+      expect.assertions(3);
     });
   });
 });
