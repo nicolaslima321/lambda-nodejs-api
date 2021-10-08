@@ -31,7 +31,7 @@ functions:
     memorySize: 128
     description: Hello world
     events:
-      - http: 
+      - http:
           path: offer
           method: get
   createOffers:
@@ -39,8 +39,17 @@ functions:
     memorySize: 128
     description: Create offers for Brands
     events:
-      - http: 
+      - http:
           path: offer
+          method: post
+          private: true
+  offersLocationAssigner:
+    handler: api/offer.linkToLocation
+    memorySize: 128
+    description: Link location to a Offer
+    events:
+      - http:
+          path: offer/{offerId}/link-location/{locationId}
           method: post
           private: true
 
@@ -54,7 +63,7 @@ resources:
         AttributeDefinitions:
           -
             AttributeName: "id"
-            AttributeType: "S" 
+            AttributeType: "S"
           -
             AttributeName: "brandId"
             AttributeType: "S"
@@ -85,7 +94,7 @@ resources:
         AttributeDefinitions:
           -
             AttributeName: "id"
-            AttributeType: "S" 
+            AttributeType: "S"
           -
             AttributeName: "brandId"
             AttributeType: "S"
