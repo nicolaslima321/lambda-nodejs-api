@@ -37,14 +37,7 @@ module.exports.create = async (offerParams) => {
 module.exports.getById = async (offerId) => {
   const offerParams = { TableName: OFFER_TABLE, Key: { id: offerId } }
 
-  try {
-    return await dynamoDb.get(offerParams).promise();
-
-  } catch (error) {
-    console.error(`${__MODULE__}@getById: An error ocurred to get offer #${offerId}`, error);
-
-    return null;
-  }
+  return await dynamoDb.get(offerParams).promise();
 };
 
 module.exports.linkToLocation = async (offer, location) => {
