@@ -1,6 +1,7 @@
 const __MODULE__ = 'Offer';
 const { mountedResponse } = require('./utils/response');
 const offerService = require('./services/offerService');
+const locationService = require('./services/locationService');
 
 module.exports.create = async (event) => {
   const requestBody = JSON.parse(event.body);
@@ -13,7 +14,7 @@ module.exports.create = async (event) => {
     return mountedResponse(body, 400);
   }
 
-  const offerCreated = offerService.create(offerParams);
+  const offerCreated = await offerService.create(offerParams);
 
   if (!offerCreated) {
     const body = { message: 'Could not create this offer' };
@@ -27,8 +28,17 @@ module.exports.create = async (event) => {
 module.exports.linkToLocation = async (event) => {
   const { offerId, locationId } = event.pathParameters;
 
-  // TODO: get location and offer and send as parameters
-  const offerWasLinked = offerService.linkToLocation(offerId, locationId);
+  const offer = await offerService.getById(offerId);
+  const location = await locationService.getById(locationId);
+
+  if (!offer || !location) {
+    console.log(`${__MODULE__}@linkToLocation: Offer or Location does not exists for given ids`, event);
+    const body = { message: 'Offer or Location does not exists!' };
+
+    return mountedResponse(body, 400);
+  }
+
+  const offerWasLinked = await offerService.linkToLocation(offerId, locationId);
 
   if (!offerWasLinked) {
     const body = { message: 'Could not link this Offer to this Location' };

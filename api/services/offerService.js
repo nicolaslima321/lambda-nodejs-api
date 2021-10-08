@@ -28,23 +28,20 @@ module.exports.create = async (offerParams) => {
     return offer;
 
   } catch (error) {
-    console.log(`${__MODULE__}@create: An error ocurred for offer creation`, error);
+    console.error(`${__MODULE__}@create: An error ocurred for offer creation`, error);
 
     return false;
   }
 };
 
 module.exports.getById = async (offerId) => {
-  const offerParams = {
-    TableName: OFFER_TABLE,
-    Key: { id: offerId }
-  }
+  const offerParams = { TableName: OFFER_TABLE, Key: { id: offerId } }
 
   try {
     return await dynamoDb.get(offerParams).promise();
 
   } catch (error) {
-    console.log(`${__MODULE__}@getById: An error ocurred to get offer #${offerId}`, error);
+    console.error(`${__MODULE__}@getById: An error ocurred to get offer #${offerId}`, error);
 
     return null;
   }
@@ -73,7 +70,7 @@ module.exports.linkToLocation = async (offer, location) => {
 
     return true;
   } catch (error) {
-    console.log(`${__MODULE__}@linkToLocation: An error ocurred to link offer #${offer.id} to location #${location.id}`, error);
+    console.error(`${__MODULE__}@linkToLocation: An error ocurred to link offer #${offer.id} to location #${location.id}`, error);
 
     return false;
   }
