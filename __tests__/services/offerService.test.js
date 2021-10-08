@@ -19,7 +19,7 @@ const offerParams = {
 const mockedOffer = {
   ...offerParams,
   id: "d9b1d9ff-543e-47c7-895f-87f71dcad91b",
-  locationsTotal: "d9b1d9ff-543e-47c7-895f-87f71dcad91b",
+  publisherId: "d9b1d9ff-543e-47c7-895f-87f71dcad91b",
 };
 
 describe('Test OfferService >', () => {
