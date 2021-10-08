@@ -26,14 +26,6 @@ provider:
       Resource: "*"
 
 functions:
-  hello:
-    handler: api/handler.hello
-    memorySize: 128
-    description: Hello world
-    events:
-      - http:
-          path: offer
-          method: get
   createOffers:
     handler: api/offer.create
     memorySize: 128

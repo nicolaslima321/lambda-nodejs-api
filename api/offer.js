@@ -35,7 +35,7 @@ module.exports.linkToLocation = async (event) => {
     console.log(`${__MODULE__}@linkToLocation: Offer or Location does not exists for given ids`, event);
     const body = { message: 'Offer or Location does not exists!' };
 
-    return mountedResponse(body, 400);
+    return mountedResponse(body, 404);
   }
 
   const offerWasLinked = await offerService.linkToLocation(offerId, locationId);
