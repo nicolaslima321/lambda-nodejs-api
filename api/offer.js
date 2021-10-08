@@ -27,6 +27,7 @@ module.exports.create = async (event) => {
 
 module.exports.linkToLocation = async (event) => {
   const { offerId, locationId } = event.pathParameters;
+  console.log(`${__MODULE__}@linkToLocation: Assigning location #${locationId} to an offer #${offerId}`, event);
 
   const offer = await offerService.getById(offerId);
   const location = await locationService.getById(locationId);

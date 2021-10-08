@@ -4,6 +4,7 @@ const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const __MODULE__ = 'OfferService';
+const myLodash = require('./utils/myLodash');
 const { DEFAULT_UUID, LOCATION_TABLE, OFFER_TABLE } = process.env
 
 module.exports.create = async (offerParams) => {
@@ -37,7 +38,11 @@ module.exports.create = async (offerParams) => {
 module.exports.getById = async (offerId) => {
   const offerParams = { TableName: OFFER_TABLE, Key: { id: offerId } }
 
-  return await dynamoDb.get(offerParams).promise();
+  const offer = await dynamoDb.get(offerParams).promise();
+
+  if (!offer || myLodash.objectIsEmpty(offer)) return null;
+
+  return offer;
 };
 
 module.exports.linkToLocation = async (offer, location) => {
