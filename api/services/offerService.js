@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const __MODULE__ = 'OfferService';
-const myLodash = require('./utils/myLodash');
+const myLodash = require('../utils/myLodash');
 const { DEFAULT_UUID, LOCATION_TABLE, OFFER_TABLE } = process.env
 
 module.exports.create = async (offerParams) => {
@@ -38,9 +38,15 @@ module.exports.create = async (offerParams) => {
 module.exports.getById = async (offerId) => {
   const offerParams = { TableName: OFFER_TABLE, Key: { id: offerId } }
 
-  const offer = await dynamoDb.get(offerParams).promise();
+  const offerFound = await dynamoDb.get(offerParams).promise();
 
-  if (!offer || myLodash.objectIsEmpty(offer)) return null;
+  if (!offerFound || myLodash.objectIsEmpty(offerFound)) {
+    console.log(`${__MODULE__}@getById: No offer was found by id ${offerId}`);
+
+    return null;
+  }
+
+  const { Item: offer } = offerFound;
 
   return offer;
 };
@@ -58,7 +64,7 @@ module.exports.linkToLocation = async (offer, location) => {
     TableName: OFFER_TABLE,
     Key: { id: offer.id },
     UpdateExpression: "set locationsTotal = :l",
-    ExpressionAttributeValues: { ":l": offer.locationsTotal + 1 },
+    ExpressionAttributeValues: { ":l": Number.parseInt(offer.locationsTotal) + 1 },
     ReturnValues: "UPDATED_NEW"
   };
 

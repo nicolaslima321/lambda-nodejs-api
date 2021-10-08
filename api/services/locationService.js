@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const __MODULE__ = 'LocationService';
-const myLodash = require('./utils/myLodash');
+const myLodash = require('../utils/myLodash');
 const { LOCATION_TABLE } = process.env
 
 module.exports.create = async (locationParams) => {
@@ -36,9 +36,15 @@ module.exports.create = async (locationParams) => {
 module.exports.getById = async (locationId) => {
   const locationParams = { TableName: LOCATION_TABLE, Key: { id: locationId } }
 
-  const location = await dynamoDb.get(locationParams).promise();
+  const locationFound = await dynamoDb.get(locationParams).promise();
 
-  if (!location || myLodash.objectIsEmpty(location)) return null;
+  if (!locationFound || myLodash.objectIsEmpty(locationFound)) {
+    console.log(`${__MODULE__}@getById: No location was found by id ${locationId}`);
+
+    return null;
+  }
+
+  const { Item: location } = locationFound;
 
   return location;
 };

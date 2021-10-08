@@ -27,13 +27,15 @@ module.exports.create = async (event) => {
 
 module.exports.linkToLocation = async (event) => {
   const { offerId, locationId } = event.pathParameters;
-  console.log(`${__MODULE__}@linkToLocation: Assigning location #${locationId} to an offer #${offerId}`, event);
+  console.log(`${__MODULE__}@linkToLocation: Assigning location #${locationId} to offer #${offerId}`, event);
 
   const offer = await offerService.getById(offerId);
   const location = await locationService.getById(locationId);
 
+  console.debug(`${__MODULE__}@linkToLocation: Offer found`, offer);
+  console.debug(`${__MODULE__}@linkToLocation: Location found`, location);
+
   if (!offer || !location) {
-    console.log(`${__MODULE__}@linkToLocation: Offer or Location does not exists for given ids`, event);
     const body = { message: 'Offer or Location does not exists!' };
 
     return mountedResponse(body, 404);
