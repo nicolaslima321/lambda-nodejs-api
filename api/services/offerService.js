@@ -64,7 +64,7 @@ module.exports.linkToLocation = async (offer, location) => {
     TableName: OFFER_TABLE,
     Key: { id: offer.id },
     UpdateExpression: "set locationsTotal = :l",
-    ExpressionAttributeValues: { ":l": Number.parseInt(offer.locationsTotal) + 1 },
+    ExpressionAttributeValues: { ":l": offer.locationsTotal + 1 },
     ReturnValues: "UPDATED_NEW"
   };
 

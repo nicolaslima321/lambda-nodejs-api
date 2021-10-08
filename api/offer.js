@@ -41,7 +41,7 @@ module.exports.linkToLocation = async (event) => {
     return mountedResponse(body, 404);
   }
 
-  const offerWasLinked = await offerService.linkToLocation(offerId, locationId);
+  const offerWasLinked = await offerService.linkToLocation(offer, location);
 
   if (!offerWasLinked) {
     const body = { message: 'Could not link this Offer to this Location' };
