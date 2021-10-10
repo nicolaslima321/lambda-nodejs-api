@@ -98,6 +98,8 @@ module.exports.linkAllBrandsLocationToAnOffer = async (event) => {
     return mountedResponse(body, 200);
 
   } catch (error) {
+    console.error(`${__MODULE__}@linkAllBrandsLocationToAnOffer: An unexpected error ocurred`, error);
+
     const body = { message: 'Could not perform brands location assignment' };
 
     return mountedResponse(body, 500);
