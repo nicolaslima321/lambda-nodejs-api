@@ -1,5 +1,6 @@
 const __MODULE__ = 'Offer';
 const { mountedResponse } = require('./utils/response');
+const brandService = require('./services/brandService');
 const offerService = require('./services/offerService');
 const locationService = require('./services/locationService');
 
@@ -50,4 +51,55 @@ module.exports.linkToLocation = async (event) => {
 
     const body = { message: 'Offer successfully linked to this Location' };
     return mountedResponse(body, 200);
+};
+
+module.exports.linkAllBrandsLocationToAnOffer = async (event) => {
+  const { offerId, brandId } = event.pathParameters;
+  console.log(`${__MODULE__}@linkAllBrandsLocationToAnOffer: Assigning all locations from brand #${brandId} to offer #${offerId}`, event);
+
+  const offer = await offerService.getById(offerId);
+  const locations = await brandService.getAllLocationsFromBrand(brandId);
+
+  console.debug(`${__MODULE__}@linkAllBrandsLocationToAnOffer: Offer found`, offer);
+  console.debug(`${__MODULE__}@linkAllBrandsLocationToAnOffer: Locations found`, locations);
+
+  if (!offer) {
+    const body = { message: 'Offer does not exists!' };
+
+    return mountedResponse(body, 404);
+  }
+
+  if (locations && locations.length == 0) {
+    const body = { message: 'No Locations were found for this brand!' };
+
+    return mountedResponse(body, 404);
+  }
+
+  if (!locations) {
+    const body = { message: 'An error ocurred while fetching all locations' };
+    return mountedResponse(body, 500);
+  }
+
+  try {
+    const results = await Promise.allSettled(locations.forEach((location) => {
+      await offerService.linkToLocation(offer, location);
+    }));
+
+    const hasSomeFailure = results.some(result => result.status == 'rejected');
+
+    if (hasSomeFailure) {
+      const body = { message: 'The action was completed, but not entirely successfull, some locations were not linked to this offer. Try again to link all them' };
+
+      return mountedResponse(body, 200);
+    }
+
+    const body = { message: 'The action was successfully completed!' };
+
+    return mountedResponse(body, 200);
+
+  } catch (error) {
+    const body = { message: 'Could not perform brands location assignment' };
+
+    return mountedResponse(body, 500);
+  }
 };
