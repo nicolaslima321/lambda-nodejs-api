@@ -49,7 +49,7 @@ functions:
   brandsOffersLocationAssigner:
     handler: api/offer.linkAllBrandsLocationToAnOffer
     memorySize: 128
-    description: Link location to a Offer
+    description: Link all locations from a Brand to an Offer
     events:
       - http:
           path: offer/{offerId}/link-all-brands-location/{brandId}

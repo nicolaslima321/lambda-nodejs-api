@@ -32,9 +32,10 @@ module.exports.create = async (brandName) => {
 
 module.exports.getAllLocationsFromBrand = async (brandId) => {
   const locationQuery = {
-    KeyConditionExpression: 'brandId = :brandId',
+    KeyConditionExpression: 'brandId = :brandId AND hasOffer = :hasOffer',
     ExpressionAttributeValues: {
       ':brandId': { 'N': brandId },
+      ':hasOffer': { 'BOOL': false },
     },
     TableName: LOCATION_TABLE,
   };
