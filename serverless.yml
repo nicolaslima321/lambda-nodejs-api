@@ -14,8 +14,9 @@ provider:
   region: us-east-1
   environment:
     DEFAULT_UUID: "3693ac7e-3e2b-432c-8c60-2b786453ca9b"
-    OFFER_TABLE: "offer-dev"
+    BRAND_TABLE: "brand-dev"
     LOCATION_TABLE: "location-dev"
+    OFFER_TABLE: "offer-dev"
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -43,6 +44,15 @@ functions:
     events:
       - http:
           path: offer/{offerId}/link-location/{locationId}
+          method: post
+          private: true
+  brandsOffersLocationAssigner:
+    handler: api/offer.linkAllBrandsLocationToAnOffer
+    memorySize: 128
+    description: Link location to a Offer
+    events:
+      - http:
+          path: offer/{offerId}/link-all-brands-location/{brandId}
           method: post
           private: true
 
@@ -107,6 +117,22 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    BrandsDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.BRAND_TABLE}
+        AttributeDefinitions:
+          -
+            AttributeName: "id"
+            AttributeType: "S"
+        KeySchema:
+          -
+            AttributeName: "id"
+            KeyType: "HASH"
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
