@@ -51,6 +51,22 @@ module.exports.getById = async (offerId) => {
   return offer;
 };
 
+module.exports.getAll = async () => {
+  const offerParams = { TableName: OFFER_TABLE }
+
+  const offersFound = await dynamoDb.scan(offerParams).promise();
+
+  if (!offersFound || myLodash.objectIsEmpty(offersFound)) {
+    console.log(`${__MODULE__}@getAll: No offer was found`);
+
+    return null;
+  }
+
+  const { Items: offer } = offersFound;
+
+  return offer;
+};
+
 module.exports.linkToLocation = async (offer, location) => {
   const locationParams = {
     TableName: LOCATION_TABLE,

@@ -28,6 +28,36 @@ provider:
       Resource: "*"
 
 functions:
+  # Brands (Create, Index, Show)
+  createBrands:
+    handler: api/brand.create
+    memorySize: 128
+    description: Create Brands
+    events:
+      - http:
+          path: brand
+          method: post
+          private: true
+  getAllBrands:
+    handler: api/brand.index
+    memorySize: 128
+    description: Get all Brands
+    events:
+      - http:
+          path: brand
+          method: get
+          private: true
+  showBrand:
+    handler: api/brand.show
+    memorySize: 128
+    description: Get Brand by id
+    events:
+      - http:
+          path: brand/{brandId}
+          method: get
+          private: true
+
+  # Offers (Create, Index, Show)
   createOffers:
     handler: api/offer.create
     memorySize: 128
@@ -37,6 +67,55 @@ functions:
           path: offer
           method: post
           private: true
+  getAllOffers:
+    handler: api/offer.index
+    memorySize: 128
+    description: Get all Offers
+    events:
+      - http:
+          path: offer
+          method: get
+          private: true
+  showOffer:
+    handler: api/offer.show
+    memorySize: 128
+    description: Get Offer by id
+    events:
+      - http:
+          path: offer/{offerId}
+          method: get
+          private: true
+
+  # Location (Create, Index, Show)
+  createLocations:
+    handler: api/location.create
+    memorySize: 128
+    description: Create Locations
+    events:
+      - http:
+          path: location
+          method: post
+          private: true
+  getAllLocations:
+    handler: api/location.index
+    memorySize: 128
+    description: Get all Locations
+    events:
+      - http:
+          path: location
+          method: get
+          private: true
+  showLocation:
+    handler: api/location.show
+    memorySize: 128
+    description: Get Location by id
+    events:
+      - http:
+          path: location/{locationId}
+          method: get
+          private: true
+
+  # Logical Endpoints - Part 2 and Bonus
   offersLocationAssigner:
     handler: api/offer.linkToLocation
     memorySize: 128

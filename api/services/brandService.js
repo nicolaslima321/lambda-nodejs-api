@@ -4,14 +4,15 @@ const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const __MODULE__ = 'BrandService';
+const myLodash = require('../utils/myLodash');
 const { LOCATION_TABLE, BRAND_TABLE } = process.env
 
-module.exports.create = async (brandName) => {
+module.exports.create = async (brandParams) => {
   const currentTimestamp = new Date().now;
 
   const brand = {
     id: uuid.v1(),
-    name: brandName,
+    name: brandParams.name,
     created: currentTimestamp,
     updated: currentTimestamp,
   };
@@ -28,6 +29,38 @@ module.exports.create = async (brandName) => {
 
     return false;
   }
+};
+
+module.exports.getById = async (brandId) => {
+  const brandParams = { TableName: BRAND_TABLE, Key: { id: brandId } }
+
+  const brandFound = await dynamoDb.get(brandParams).promise();
+
+  if (!brandFound || myLodash.objectIsEmpty(brandFound)) {
+    console.log(`${__MODULE__}@getById: No brand was found by id ${brandId}`);
+
+    return null;
+  }
+
+  const { Item: brand } = brandFound;
+
+  return brand;
+};
+
+module.exports.getAll = async () => {
+  const brandParams = { TableName: BRAND_TABLE }
+
+  const brandsFound = await dynamoDb.scan(brandParams).promise();
+
+  if (!brandsFound || myLodash.objectIsEmpty(brandsFound)) {
+    console.log(`${__MODULE__}@getAll: No brand was found`);
+
+    return null;
+  }
+
+  const { Items: brand } = brandsFound;
+
+  return brand;
 };
 
 module.exports.getAllLocationsFromBrand = async (brandId) => {

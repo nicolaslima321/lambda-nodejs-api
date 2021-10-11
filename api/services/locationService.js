@@ -48,3 +48,19 @@ module.exports.getById = async (locationId) => {
 
   return location;
 };
+
+module.exports.getAll = async () => {
+  const locationParams = { TableName: LOCATION_TABLE }
+
+  const locationsFound = await dynamoDb.scan(locationParams).promise();
+
+  if (!locationsFound || myLodash.objectIsEmpty(locationsFound)) {
+    console.log(`${__MODULE__}@getAll: No location was found`);
+
+    return null;
+  }
+
+  const { Items: location } = locationsFound;
+
+  return location;
+};

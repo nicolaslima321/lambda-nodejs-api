@@ -4,6 +4,39 @@ const brandService = require('./services/brandService');
 const offerService = require('./services/offerService');
 const locationService = require('./services/locationService');
 
+module.exports.index = async (event) => {
+  console.log(`${__MODULE__}@index: Fetch all offers`, event);
+
+  const offers = await locationService.getAll();
+
+  if (!offers) {
+    const body = { message: 'No offers was found!' };
+
+    return mountedResponse(body, 404);
+  }
+
+  const body = { message: 'Offers successfully fetched', offers };
+
+  return mountedResponse(body, 200);
+};
+
+module.exports.show = async (event) => {
+  const { offerId } = event.pathParameters;
+  console.log(`${__MODULE__}@show: Show offer #${offerId}`, event);
+
+  const offer = await offerService.getById(offerId);
+
+  if (!offer) {
+    const body = { message: 'No offer was found for given id!' };
+
+    return mountedResponse(body, 404);
+  }
+
+  const body = { message: 'Offer successfully found', offer };
+
+  return mountedResponse(body, 200);
+};
+
 module.exports.create = async (event) => {
   const requestBody = JSON.parse(event.body);
   const { ...offerParams } = requestBody;
