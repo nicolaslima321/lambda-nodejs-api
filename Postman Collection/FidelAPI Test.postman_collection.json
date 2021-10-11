@@ -1,0 +1,336 @@
+{
+	"info": {
+		"_postman_id": "d42cd46c-0f92-438b-9e1d-953dbcb4999f",
+		"name": "FidelAPI Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Offers",
+			"item": [
+				{
+					"name": "Offer GET",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{FIDELTEST-API-KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{AWS-API-URL}}/dev/offer",
+							"host": [
+								"{{AWS-API-URL}}"
+							],
+							"path": [
+								"dev",
+								"offer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Offer/:ID GET",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{FIDELTEST-API-KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{AWS-API-URL}}/dev/offer/{{offerId}}",
+							"host": [
+								"{{AWS-API-URL}}"
+							],
+							"path": [
+								"dev",
+								"offer",
+								"{{offerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Offer POST",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{FIDELTEST-API-KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Super Duper Offer\",\n  \"id\": \"d9b1d9ff-543e-47c7-895f-87f71dcad91b\",\n  \"brandId\": \"692126c8-6e72-4ad7-8a73-25fc2f1f56e4\",\n  \"locationsTotal\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AWS-API-URL}}/dev/offer",
+							"host": [
+								"{{AWS-API-URL}}"
+							],
+							"path": [
+								"dev",
+								"offer"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Locations",
+			"item": [
+				{
+					"name": "Location GET",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{FIDELTEST-API-KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{AWS-API-URL}}/dev/location",
+							"host": [
+								"{{AWS-API-URL}}"
+							],
+							"path": [
+								"dev",
+								"location"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Location/:ID GET",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{FIDELTEST-API-KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{AWS-API-URL}}/dev/location/{{locationId}}",
+							"host": [
+								"{{AWS-API-URL}}"
+							],
+							"path": [
+								"dev",
+								"location",
+								"{{locationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Location POST",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{FIDELTEST-API-KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"address\": \"Lorem ipsum dolor\",\n  \"brandId\": \"692126c8-6e72-4ad7-8a73-25fc2f1f56e4\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AWS-API-URL}}/dev/location",
+							"host": [
+								"{{AWS-API-URL}}"
+							],
+							"path": [
+								"dev",
+								"location"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Brands",
+			"item": [
+				{
+					"name": "Brand GET",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{FIDELTEST-API-KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{AWS-API-URL}}/dev/brand",
+							"host": [
+								"{{AWS-API-URL}}"
+							],
+							"path": [
+								"dev",
+								"brand"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brand/:ID GET",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{FIDELTEST-API-KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{AWS-API-URL}}/dev/brand/{{brandId}}",
+							"host": [
+								"{{AWS-API-URL}}"
+							],
+							"path": [
+								"dev",
+								"brand",
+								"{{brandId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brand POST",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{FIDELTEST-API-KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Super Duper Brand\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AWS-API-URL}}/dev/brand",
+							"host": [
+								"{{AWS-API-URL}}"
+							],
+							"path": [
+								"dev",
+								"brand"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Link Offer to Location [POST]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{FIDELTEST-API-KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{AWS-API-URL}}/dev/offer/{{offerId}}/link-location/{{locationId}}",
+					"host": [
+						"{{AWS-API-URL}}"
+					],
+					"path": [
+						"dev",
+						"offer",
+						"{{offerId}}",
+						"link-location",
+						"{{locationId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Link all brand Locations to an Offer [POST]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{FIDELTEST-API-KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{AWS-API-URL}}/dev/offer/{{offerId}}/link-all-brands-location/{{brandId}}",
+					"host": [
+						"{{AWS-API-URL}}"
+					],
+					"path": [
+						"dev",
+						"offer",
+						"{{offerId}}",
+						"link-all-brands-location",
+						"{{brandId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
