@@ -105,8 +105,8 @@ describe('Test Offer main lambda function >', () => {
     })
 
     it('should return the given offer, with status 200', async () => {
-      offerService.getAll = jest.fn();
-      offerService.getAll.mockReturnValue(mockedOffer);
+      offerService.getById = jest.fn();
+      offerService.getById.mockReturnValue(mockedOffer);
 
       const response = await offerHandler.show(showEvent);
 
@@ -119,13 +119,13 @@ describe('Test Offer main lambda function >', () => {
         offer: mockedOffer,
       }))
 
-      expect.assertions(3);
+      expect.assertions(4);
     });
 
     describe('when has no offer', () => {
       it('should return status 404', async () => {
-        offerService.getAll = jest.fn();
-        offerService.getAll.mockReturnValue(null);
+        offerService.getById = jest.fn();
+        offerService.getById.mockReturnValue(null);
 
         const response = await offerHandler.index();
 
