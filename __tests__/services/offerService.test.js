@@ -9,6 +9,7 @@ const locationService = require('../../api/services/locationService');
 
 let dynamoDbPut;
 let dynamoDbGet;
+let dynamoDbScan;
 let dynamoDbUpdate;
 
 const offerTableName = process.env.OFFER_TABLE;
@@ -37,6 +38,7 @@ describe('Test OfferService >', () => {
   beforeAll(() => {
     dynamoDbPut = jest.spyOn(dynamoDb.DocumentClient.prototype, 'put');
     dynamoDbGet = jest.spyOn(dynamoDb.DocumentClient.prototype, 'get');
+    dynamoDbScan = jest.spyOn(dynamoDb.DocumentClient.prototype, 'scan');
     dynamoDbUpdate = jest.spyOn(dynamoDb.DocumentClient.prototype, 'update');
   });
 
@@ -135,6 +137,44 @@ describe('Test OfferService >', () => {
         TableName: offerTableName,
         Key: { id: 123 },
       });
+
+      expect.assertions(3);
+    });
+  });
+
+  describe('getAll', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    })
+
+    it('should get all items on db', async () => {
+      dynamoDbScan.mockReturnValue({
+        promise: () => Promise.resolve({ Items: [ mockedOffer, mockedOffer ] }),
+      });
+
+      const offers = await offerService.getAll();
+
+      expect(offers).toBeDefined();
+      expect(Array.isArray(offers)).toBeTruthy();
+      expect(offers.length).toBe(2);
+
+      expect(dynamoDbScan).toHaveBeenCalledTimes(1);
+      expect(dynamoDbScan).toHaveBeenCalledWith({ TableName: offerTableName });
+
+      expect.assertions(5);
+    });
+
+    it('should return null when item does not exists on db', async () => {
+      dynamoDbScan.mockReturnValue({
+        promise: () => Promise.resolve(null),
+      });
+
+      const offer = await offerService.getAll();
+
+      expect(offer).toBeNull();
+
+      expect(dynamoDbScan).toHaveBeenCalledTimes(1);
+      expect(dynamoDbScan).toHaveBeenCalledWith({ TableName: offerTableName });
 
       expect.assertions(3);
     });
