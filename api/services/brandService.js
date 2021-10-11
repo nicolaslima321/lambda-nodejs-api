@@ -32,16 +32,17 @@ module.exports.create = async (brandName) => {
 
 module.exports.getAllLocationsFromBrand = async (brandId) => {
   const locationQuery = {
-    KeyConditionExpression: 'brandId = :brandId AND hasOffer = :hasOffer',
+    FilterExpression: 'brandId = :brandId AND hasOffer = :hasOffer',
     ExpressionAttributeValues: {
-      ':brandId': { 'N': brandId },
-      ':hasOffer': { 'BOOL': false },
+      ':brandId': brandId,
+      ':hasOffer': false,
     },
+    ProjectionExpression: 'id, brandId, hasOffer, address',
     TableName: LOCATION_TABLE,
   };
 
   try {
-    const { Items: locations } = await dynamoDb.query(locationQuery).promise();
+    const { Items: locations } = await dynamoDb.scan(locationQuery).promise();
 
     if (!locations || locations.length < 1) {
       console.log(`${__MODULE__}@getAllLocationsFromBrand: No locations were found by brandId ${brandId}`);

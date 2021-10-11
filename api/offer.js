@@ -81,9 +81,12 @@ module.exports.linkAllBrandsLocationToAnOffer = async (event) => {
   }
 
   try {
-    const results = await Promise.allSettled(locations.forEach((location) => {
-      await offerService.linkToLocation(offer, location);
-    }));
+    const assignmentPromises = locations.map((location) => {
+      offer.locationsTotal += 1;
+      return offerService.linkToLocation(offer, location);
+    });
+
+    const results = await Promise.allSettled(assignmentPromises);
 
     const hasSomeFailure = results.some(result => result.status == 'rejected');
 
