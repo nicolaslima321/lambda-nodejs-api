@@ -18,13 +18,13 @@ const locationTableName = process.env.LOCATION_TABLE;
 const offerParams = {
   name: "Super Duper Offer",
   brandId: "692126c8-6e72-4ad7-8a73-25fc2f1f56e4",
-  locationsTotal: 0,
 };
 
 let mockedOffer = {
   ...offerParams,
   id: "d9b1d9ff-543e-47c7-895f-87f71dcad91b",
   publisherId: "d9b1d9ff-543e-47c7-895f-87f71dcad91b",
+  locationsTotal: 0,
 };
 
 let mockedLocation = {

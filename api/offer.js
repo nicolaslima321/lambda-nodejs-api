@@ -7,7 +7,7 @@ const locationService = require('./services/locationService');
 module.exports.index = async (event) => {
   console.log(`${__MODULE__}@index: Fetch all offers`, event);
 
-  const offers = await locationService.getAll();
+  const offers = await offerService.getAll();
 
   if (!offers) {
     const body = { message: 'No offers was found!' };
