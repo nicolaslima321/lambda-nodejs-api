@@ -1,8 +1,6 @@
-const __MODULE__ = 'Offer';
+const __MODULE__ = 'Brand';
 const { mountedResponse } = require('./utils/response');
 const brandService = require('./services/brandService');
-const offerService = require('./services/offerService');
-const locationService = require('./services/locationService');
 
 module.exports.index = async (event) => {
   console.log(`${__MODULE__}@index: Fetch all brands`, event);
@@ -55,6 +53,6 @@ module.exports.create = async (event) => {
     return mountedResponse(body, 500);
   }
 
-  const body = { message: 'Brand successfully created!', offer: brandCreated };
+  const body = { message: 'Brand successfully created!', brand: brandCreated };
   return mountedResponse(body, 200);
 };

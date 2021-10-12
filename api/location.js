@@ -53,6 +53,6 @@ module.exports.create = async (event) => {
     return mountedResponse(body, 500);
   }
 
-  const body = { message: 'Location successfully created!', offer: locationCreated };
+  const body = { message: 'Location successfully created!', location: locationCreated };
   return mountedResponse(body, 200);
 };

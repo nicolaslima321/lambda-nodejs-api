@@ -1,12 +1,7 @@
 let offerService = require('../../api/services/offerService');
-let locationService = require('../../api/services/locationService');
 let brandService = require('../../api/services/brandService');
 
 const offerHandler = require('../../api/offer');
-
-// jest.mock('../../api/services/offerService');
-// jest.mock('../../api/services/locationService');
-// jest.mock('../../api/services/brandService');
 
 const offerParams = {
   name: "Super Duper Offer",
@@ -50,10 +45,6 @@ const linkAllBrandsLocationToAnOfferEvent = {
 };
 
 describe('Test Offer main lambda function >', () => {
-  // beforeAll(() => {
-
-  // });
-
   afterAll(() => {
     jest.clearAllMocks();
   });
@@ -64,10 +55,10 @@ describe('Test Offer main lambda function >', () => {
     })
 
     it('should return all offers, with status 200', async () => {
-      const arrayOfMmockedOffers = [ mockedOffer, mockedOffer ];
+      const arrayOfMockedOffers = [ mockedOffer, mockedOffer ];
 
       offerService.getAll = jest.fn();
-      offerService.getAll.mockReturnValue(arrayOfMmockedOffers);
+      offerService.getAll.mockReturnValue(arrayOfMockedOffers);
 
       const response = await offerHandler.index();
 
@@ -76,7 +67,7 @@ describe('Test Offer main lambda function >', () => {
       expect(response.statusCode).toBe(200);
       expect(response.body).toBe(JSON.stringify({
         message: 'Offers successfully fetched',
-        offers: arrayOfMmockedOffers,
+        offers: arrayOfMockedOffers,
       }))
 
       expect.assertions(3);
