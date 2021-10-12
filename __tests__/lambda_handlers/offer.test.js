@@ -58,7 +58,7 @@ describe('Test Offer main lambda function >', () => {
     jest.clearAllMocks();
   });
 
-  describe('index', () => {
+  describe('index >', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     })
@@ -99,7 +99,7 @@ describe('Test Offer main lambda function >', () => {
     })
   });
 
-  describe('getById', () => {
+  describe('show >', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     })
@@ -127,11 +127,11 @@ describe('Test Offer main lambda function >', () => {
         offerService.getById = jest.fn();
         offerService.getById.mockReturnValue(null);
 
-        const response = await offerHandler.index();
+        const response = await offerHandler.show(showEvent);
 
         expect(response.statusCode).toBe(404);
         expect(response.body).toBe(JSON.stringify({
-          message: 'No offers was found!',
+          message: 'No offer was found for given id!',
         }))
 
         expect.assertions(2);
@@ -139,7 +139,7 @@ describe('Test Offer main lambda function >', () => {
     })
   });
 
-  describe('create', () => {
+  describe('create >', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     })
@@ -190,5 +190,239 @@ describe('Test Offer main lambda function >', () => {
         expect.assertions(2);
       });
     })
+  });
+
+  describe('linkAllBrandsLocationToAnOffer >', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    })
+
+    it('should assign all offers, and return with status 200', async () => {
+      offerService.getById = jest.fn();
+      offerService.linkToLocation = jest.fn();
+      brandService.getAllLocationsFromBrand = jest.fn();
+
+      offerService.getById.mockReturnValue(mockedOffer);
+      offerService.linkToLocation.mockReturnValue(Promise.resolve({
+        status: 'fulfilled',
+      }));
+      brandService.getAllLocationsFromBrand.mockReturnValue([
+        mockedLocation, mockedLocation, mockedLocation,
+      ]);
+
+      const response = await offerHandler.linkAllBrandsLocationToAnOffer(
+        linkAllBrandsLocationToAnOfferEvent,
+      );
+
+      expect(offerService.linkToLocation).toHaveBeenCalledTimes(3);
+      expect(offerService.linkToLocation).toHaveBeenCalledWith(mockedOffer, mockedLocation);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toBe(JSON.stringify({
+        message: 'The action was successfully completed!',
+      }));
+
+      expect.assertions(4);
+    });
+
+    describe('when has 10000 locations to assign', () => {
+      it('should call offerService.linkToLocation 10000 successfully times', async () => {
+        offerService.getById = jest.fn();
+        offerService.linkToLocation = jest.fn();
+        brandService.getAllLocationsFromBrand = jest.fn();
+
+        offerService.getById.mockReturnValue(mockedOffer);
+        offerService.linkToLocation.mockReturnValue(Promise.resolve({
+          status: 'fulfilled',
+        }));
+
+        brandService.getAllLocationsFromBrand.mockReturnValue(Array(10000).fill(mockedLocation));
+
+        const response = await offerHandler.linkAllBrandsLocationToAnOffer(
+          linkAllBrandsLocationToAnOfferEvent,
+        );
+
+        expect(offerService.linkToLocation).toHaveBeenCalledTimes(10000);
+        expect(offerService.linkToLocation).toHaveBeenCalledWith(mockedOffer, mockedLocation);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toBe(JSON.stringify({
+          message: 'The action was successfully completed!',
+        }));
+
+        expect.assertions(4);
+      });
+
+      describe('when has some failure in one of the 10000 locations to assign', () => {
+        it('should call offerService.linkToLocation 10000 times and advice about failure', async () => {
+          offerService.getById = jest.fn();
+          offerService.linkToLocation = jest.fn();
+          brandService.getAllLocationsFromBrand = jest.fn();
+
+          offerService.getById.mockReturnValue(mockedOffer);
+          offerService.linkToLocation.mockReturnValue(Promise.resolve({
+            status: 'fulfilled',
+          })).mockReturnValueOnce(Promise.reject({
+            status: 'rejected',
+          }));
+
+          brandService.getAllLocationsFromBrand.mockReturnValue(Array(10000).fill(mockedLocation));
+
+          const response = await offerHandler.linkAllBrandsLocationToAnOffer(
+            linkAllBrandsLocationToAnOfferEvent,
+          );
+
+          expect(offerService.linkToLocation).toHaveBeenCalledTimes(10000);
+          expect(offerService.linkToLocation).toHaveBeenCalledWith(mockedOffer, mockedLocation);
+
+          expect(response.statusCode).toBe(200);
+          expect(response.body).toBe(JSON.stringify({
+            message: 'The action was completed, but not entirely successfull, some locations were not linked to this offer. Try again to link all them',
+          }));
+
+          expect.assertions(4);
+        });
+      });
+    });
+
+    describe('when has some failure at one of the assignment promises', () => {
+      it('should successfully assign some offers and advice to retry, returning status 200', async () => {
+        offerService.getById = jest.fn();
+        offerService.linkToLocation = jest.fn();
+        brandService.getAllLocationsFromBrand = jest.fn();
+
+        offerService.getById.mockReturnValue(mockedOffer);
+        offerService.linkToLocation.mockReturnValue(Promise.resolve({
+          status: 'fulfilled',
+        })).mockReturnValueOnce(Promise.reject({
+          status: 'rejected',
+        }));
+
+        brandService.getAllLocationsFromBrand.mockReturnValue([
+          mockedLocation, mockedLocation, mockedLocation,
+        ]);
+
+        const response = await offerHandler.linkAllBrandsLocationToAnOffer(
+          linkAllBrandsLocationToAnOfferEvent,
+        );
+
+        expect(offerService.linkToLocation).toHaveBeenCalledTimes(3);
+        expect(offerService.linkToLocation).toHaveBeenCalledWith(mockedOffer, mockedLocation);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toBe(JSON.stringify({
+          message: 'The action was completed, but not entirely successfull, some locations were not linked to this offer. Try again to link all them',
+        }));
+
+        expect.assertions(4);
+      });
+    });
+
+    describe('when all assignment promises got failure', () => {
+      it('throws exception, log error and return status 500', async () => {
+        jest.spyOn(console, 'error');
+
+        offerService.getById = jest.fn();
+        offerService.linkToLocation = jest.fn();
+        brandService.getAllLocationsFromBrand = jest.fn();
+
+        offerService.getById.mockReturnValue(mockedOffer);
+        offerService.linkToLocation.mockReturnValue(Promise.reject({
+          status: 'rejected',
+        }));
+
+        brandService.getAllLocationsFromBrand.mockReturnValue([
+          mockedLocation, mockedLocation, mockedLocation,
+        ]);
+
+        const response = await offerHandler.linkAllBrandsLocationToAnOffer(
+          linkAllBrandsLocationToAnOfferEvent,
+        );
+
+        expect(offerService.linkToLocation).toHaveBeenCalledTimes(3);
+        expect(offerService.linkToLocation).toHaveBeenCalledWith(mockedOffer, mockedLocation);
+
+        const raisedException = 'Could not perform assignment, all promises has failed';
+        expect(console.error).toHaveBeenCalledWith(
+          'Offer@linkAllBrandsLocationToAnOffer: An unexpected error ocurred', raisedException,
+        );
+
+        expect(response.statusCode).toBe(500);
+        expect(response.body).toBe(JSON.stringify({
+          message: 'Could not perform brands location assignment',
+        }));
+
+        expect.assertions(5);
+      });
+    });
+
+    describe('when offer was not found', () => {
+      it('should return status 404', async () => {
+        offerService.getById = jest.fn();
+        offerService.getById.mockReturnValue(null);
+
+        const response = await offerHandler.linkAllBrandsLocationToAnOffer(
+          linkAllBrandsLocationToAnOfferEvent,
+        );
+
+        expect(offerService.getById).toHaveBeenCalledTimes(1);
+        expect(offerService.getById).toHaveBeenCalledWith(mockedOffer.id);
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toBe(JSON.stringify({
+          message: 'Offer does not exists!',
+        }));
+
+        expect.assertions(4);
+      });
+    })
+
+    describe('when location was not found', () => {
+      it('should return status 404', async () => {
+        offerService.getById = jest.fn();
+        offerService.getById.mockReturnValue(mockedOffer);
+
+        brandService.getAllLocationsFromBrand = jest.fn();
+        brandService.getAllLocationsFromBrand.mockReturnValue([]);
+
+        const response = await offerHandler.linkAllBrandsLocationToAnOffer(
+          linkAllBrandsLocationToAnOfferEvent,
+        );
+
+        expect(brandService.getAllLocationsFromBrand).toHaveBeenCalledTimes(1);
+        expect(brandService.getAllLocationsFromBrand).toHaveBeenCalledWith(mockedBrand.id);
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toBe(JSON.stringify({
+          message: 'No Locations were found for this brand!',
+        }));
+
+        expect.assertions(4);
+      });
+    });
+
+    describe('when has failure to get location', () => {
+      it('should return status 404', async () => {
+        offerService.getById = jest.fn();
+        offerService.getById.mockReturnValue(mockedOffer);
+
+        brandService.getAllLocationsFromBrand = jest.fn();
+        brandService.getAllLocationsFromBrand.mockReturnValue(null);
+
+        const response = await offerHandler.linkAllBrandsLocationToAnOffer(
+          linkAllBrandsLocationToAnOfferEvent,
+        );
+
+        expect(brandService.getAllLocationsFromBrand).toHaveBeenCalledTimes(1);
+        expect(brandService.getAllLocationsFromBrand).toHaveBeenCalledWith(mockedBrand.id);
+
+        expect(response.statusCode).toBe(500);
+        expect(response.body).toBe(JSON.stringify({
+          message: 'An error ocurred while fetching all locations',
+        }));
+
+        expect.assertions(4);
+      });
+    });
   });
 });

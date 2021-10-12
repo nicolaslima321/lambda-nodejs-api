@@ -122,11 +122,14 @@ module.exports.linkAllBrandsLocationToAnOffer = async (event) => {
     const results = await Promise.allSettled(assignmentPromises);
 
     const hasSomeFailure = results.some(result => result.status == 'rejected');
+    const hasSomeSuccess = results.some(result => result.status == 'fulfilled');
 
-    if (hasSomeFailure) {
+    if (hasSomeFailure && hasSomeSuccess) {
       const body = { message: 'The action was completed, but not entirely successfull, some locations were not linked to this offer. Try again to link all them' };
 
       return mountedResponse(body, 200);
+    } else if (hasSomeFailure && !hasSomeSuccess) {
+      throw 'Could not perform assignment, all promises has failed';
     }
 
     const body = { message: 'The action was successfully completed!' };
