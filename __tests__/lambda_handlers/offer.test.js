@@ -1,4 +1,5 @@
 let offerService = require('../../api/services/offerService');
+let locationService = require('../../api/services/locationService');
 let brandService = require('../../api/services/brandService');
 
 const offerHandler = require('../../api/offer');
@@ -52,7 +53,7 @@ describe('Test Offer main lambda function >', () => {
   describe('index >', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-    })
+    });
 
     it('should return all offers, with status 200', async () => {
       const arrayOfMockedOffers = [ mockedOffer, mockedOffer ];
@@ -93,7 +94,7 @@ describe('Test Offer main lambda function >', () => {
   describe('show >', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-    })
+    });
 
     it('should return the given offer, with status 200', async () => {
       offerService.getById = jest.fn();
@@ -133,7 +134,7 @@ describe('Test Offer main lambda function >', () => {
   describe('create >', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-    })
+    });
 
     it('should create and return offer, with status 200', async () => {
       offerService.create = jest.fn();
@@ -183,10 +184,108 @@ describe('Test Offer main lambda function >', () => {
     })
   });
 
+  describe('linkToLocation >', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should assign offer to a location, return status 200', async () => {
+      offerService.getById = jest.fn();
+      locationService.getById = jest.fn();
+      offerService.linkToLocation = jest.fn();
+
+      offerService.getById.mockReturnValueOnce(mockedOffer);
+      locationService.getById.mockReturnValueOnce(mockedLocation);
+      offerService.linkToLocation.mockReturnValueOnce(true);
+
+      const response = await offerHandler.linkToLocation(
+        linkToLocationEvent,
+      );
+
+      expect(offerService.linkToLocation).toHaveBeenCalledTimes(1);
+      expect(offerService.linkToLocation).toHaveBeenCalledWith(mockedOffer, mockedLocation);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toBe(JSON.stringify({
+        message: 'Offer successfully linked to this Location',
+      }));
+
+      expect.assertions(4);
+    });
+
+    describe('when has failure to link location', () => {
+      it('should return status 500', async () => {
+        offerService.getById = jest.fn();
+        locationService.getById = jest.fn();
+        offerService.linkToLocation = jest.fn();
+
+        offerService.getById.mockReturnValueOnce(mockedOffer);
+        locationService.getById.mockReturnValueOnce(mockedLocation);
+        offerService.linkToLocation.mockReturnValueOnce(false);
+
+        const response = await offerHandler.linkToLocation(
+          linkToLocationEvent,
+        );
+
+        expect(offerService.linkToLocation).toHaveBeenCalledTimes(1);
+        expect(offerService.linkToLocation).toHaveBeenCalledWith(mockedOffer, mockedLocation);
+
+        expect(response.statusCode).toBe(500);
+        expect(response.body).toBe(JSON.stringify({
+          message: 'Could not link this Offer to this Location',
+        }));
+
+        expect.assertions(4);
+      });
+    });
+
+    describe('when location was not found', () => {
+      it('should return status 404', async () => {
+        offerService.getById = jest.fn();
+        locationService.getById = jest.fn();
+
+        offerService.getById.mockReturnValueOnce(mockedOffer);
+        locationService.getById.mockReturnValueOnce(null);
+
+        const response = await offerHandler.linkToLocation(
+          linkToLocationEvent,
+        );
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toBe(JSON.stringify({
+          message: 'Offer or Location does not exists!',
+        }));
+
+        expect.assertions(2);
+      });
+    });
+
+    describe('when offer was not found', () => {
+      it('should return status 404', async () => {
+        offerService.getById = jest.fn();
+        locationService.getById = jest.fn();
+
+        offerService.getById.mockReturnValueOnce(null);
+        locationService.getById.mockReturnValueOnce(mockedLocation);
+
+        const response = await offerHandler.linkToLocation(
+          linkToLocationEvent,
+        );
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toBe(JSON.stringify({
+          message: 'Offer or Location does not exists!',
+        }));
+
+        expect.assertions(2);
+      });
+    });
+  });
+
   describe('linkAllBrandsLocationToAnOffer >', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-    })
+    });
 
     it('should assign all offers, and return with status 200', async () => {
       offerService.getById = jest.fn();
