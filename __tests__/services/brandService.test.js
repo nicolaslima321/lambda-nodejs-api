@@ -11,12 +11,20 @@ let dynamoDbGet;
 let dynamoDbScan;
 
 const brandTableName = process.env.BRAND_TABLE;
+const locationTableName = process.env.LOCATION_TABLE;
 
 const brandParams = { name: "Starbucks" };
 
 let mockedBrand = {
   ...brandParams,
   id: "d9b1d9ff-543e-47c7-895f-87f71dcad91b",
+};
+
+const mockedLocation = {
+  id: "d9b1d9ff-543e-47c7-895f-87f71dcad91b",
+  address: "Konohagakure, 172",
+  brandId: mockedBrand.id,
+  hasOffer: false,
 };
 
 describe('Test BrandService >', () => {
@@ -30,7 +38,7 @@ describe('Test BrandService >', () => {
     jest.clearAllMocks();
   });
 
-  describe('create', () => {
+  describe('create >', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     })
@@ -79,7 +87,7 @@ describe('Test BrandService >', () => {
     });
   });
 
-  describe('getById', () => {
+  describe('getById >', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     })
@@ -122,7 +130,7 @@ describe('Test BrandService >', () => {
     });
   });
 
-  describe('getAll', () => {
+  describe('getAll >', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     })
@@ -157,6 +165,84 @@ describe('Test BrandService >', () => {
       expect(dynamoDbScan).toHaveBeenCalledWith({ TableName: brandTableName });
 
       expect.assertions(3);
+    });
+  });
+
+  describe('getAllLocationsFromBrand >', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    })
+
+    it('should get all locations associated to a brand', async () => {
+      dynamoDbScan.mockReturnValue({
+        promise: () => Promise.resolve({ Items: [ mockedLocation, mockedLocation ] }),
+      });
+
+      const locations = await brandService.getAllLocationsFromBrand(mockedBrand.id);
+
+      expect(locations).toBeDefined();
+      expect(Array.isArray(locations)).toBeTruthy();
+      expect(locations.length).toBe(2);
+
+      expect(dynamoDbScan).toHaveBeenCalledTimes(1);
+      expect(dynamoDbScan).toHaveBeenCalledWith({
+        FilterExpression: 'brandId = :brandId AND hasOffer = :hasOffer',
+        ExpressionAttributeValues: {
+          ':brandId': mockedBrand.id,
+          ':hasOffer': mockedLocation.hasOffer,
+        },
+        ProjectionExpression: 'id, brandId, hasOffer, address',
+        TableName: locationTableName,
+      });
+
+      expect.assertions(5);
+    });
+
+    it('should return null when theres no locations', async () => {
+      dynamoDbScan.mockReturnValue({
+        promise: () => Promise.resolve({ Items: [] }),
+      });
+
+      const locations = await brandService.getAllLocationsFromBrand(mockedBrand.id);
+
+      expect(locations).toStrictEqual([]);
+
+      expect(dynamoDbScan).toHaveBeenCalledTimes(1);
+      expect(dynamoDbScan).toHaveBeenCalledWith({
+        FilterExpression: 'brandId = :brandId AND hasOffer = :hasOffer',
+        ExpressionAttributeValues: {
+          ':brandId': mockedBrand.id,
+          ':hasOffer': mockedLocation.hasOffer,
+        },
+        ProjectionExpression: 'id, brandId, hasOffer, address',
+        TableName: locationTableName,
+      });
+
+      expect.assertions(3);
+    });
+
+    it('should log error and return null on failure', async () => {
+      jest.spyOn(console, 'error');
+
+      const rejectionObject = { error: 'foo-bar'};
+
+      dynamoDbScan.mockReturnValue({
+        promise: () => Promise.reject(rejectionObject),
+      });
+
+      const locations = await brandService.getAllLocationsFromBrand(mockedBrand.id);
+
+      expect(locations).toBeNull();
+
+      expect(dynamoDbScan).toHaveBeenCalledTimes(1);
+
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        'BrandService@getAllLocationsFromBrand: An error ocurred for locations fetch',
+        rejectionObject
+      );
+
+      expect.assertions(4);
     });
   });
 });
