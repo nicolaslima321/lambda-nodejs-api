@@ -183,6 +183,6 @@ It notify the user at response when some of the links could not be performed.
 
 ---
 ##### What i done differently if it was meant to be a production project
-- The application is currently set to work with **`Provisioned Throughput`** Read/Write Capacity at once, it could be increased to meet the demand, to not limit if reached an assumed max capacity limit, that would bring a better flow rate for many requests.
-- Its possible to add a **socket** implementation to notify the user before the request is completed at the huge request (Bonus task: 10000 locations assignments at one request), to not stuck the user while the request is not completed, then through socket, would be possible do send events of feedback for example, for each 100 locations that are linked, user will get a notion about the request progress.
+- The application is currently set to work with **`Provisioned Throughput`** Read/Write Capacity at once, it could be increased to attend the demand, to not limit if reached an assumed max capacity limit, that would bring a better flow rate for many requests.
+- It's possible to add a **socket** implementation to notify the user before the request is completed at the huge request (Bonus task: 10000 locations assignments at one request), to not stuck the user while the request is not completed, then through socket, would be possible to send events of feedback for example, for each 100 locations that are linked, user will get a notion about the request progress.
 - The test API is very simplified, user doesn't have much options to custom it's problem solution. Adding more resources will bring an better experience for them (Justl like the FidelAPI Offer today).
