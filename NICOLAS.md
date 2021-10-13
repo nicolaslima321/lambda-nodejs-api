@@ -154,7 +154,7 @@ Offers and Locations are linked to Brand through brandId, all brandId fields are
 <br>
 
 3. What are the pros and cons of Dynamodb for an API request?
-**Answer:** Cons: I thought the forms that queries are made is a little limited, it’s harder to perform queries if medium-high complexity; You have a limit of capacity write/read, that is defined on `ProvisionedThroughput` (in serverlerss.yml file), and even defining it to 'auto', it's not very predictable how much you can will for it.
+**Answer:** Cons: I thought the forms that queries are made is a little limited, it’s harder to perform queries with medium-high complexity; You have a limit of capacity write/read, that is defined on `ProvisionedThroughput` (in serverlerss.yml file), and even defining it to 'auto', it's not very predictable how much you will pay for it.
 Pros: It’s very easy to install, configure; It’s a flexible database; The SDK integration is very good and easy to perform;
 
 ---
@@ -180,3 +180,9 @@ POST - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/offer/{offerId
 ```
 
 It notify the user at response when some of the links could not be performed.
+
+---
+##### What i done differently if it was meant to be a production project
+- The application is currently set to work with **`Provisioned Throughput`** Read/Write Capacity at once, it could be increased to meet the demand, to not limit if reached an assumed max capacity limit, that would bring a better flow rate for many requests.
+- Its possible to add a **socket** implementation to notify the user before the request is completed at the huge request (Bonus task: 10000 locations assignments at one request), to not stuck the user while the request is not completed, then through socket, would be possible do send events of feedback for example, for each 100 locations that are linked, user will get a notion about the request progress.
+- The test API is very simplified, user doesn't have much options to custom it's problem solution. Adding more resources will bring an better experience for them (Justl like the FidelAPI Offer today).
