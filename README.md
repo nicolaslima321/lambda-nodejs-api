@@ -1,5 +1,8 @@
 # Fidel Coding Challenge
 
+## Nicolas Notes
+
+Hello there! I will answer the questions in file called [NICOLAS.md](./NICOLAS.md)
 ## About this challenge
 
 This challenge focuses on RESTful API and data model design. It consists of 2 mandatory parts, plus an optional bonus task.
