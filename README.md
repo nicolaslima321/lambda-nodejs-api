@@ -1,95 +1,152 @@
-# Fidel Coding Challenge
+#Lambda NodeJS API
 
-## Nicolas Notes
+### Context
 
-Hello there! I will answer the questions in file called [NICOLAS.md](./NICOLAS.md)
-## About this challenge
-
-This challenge focuses on RESTful API and data model design. It consists of 2 mandatory parts, plus an optional bonus task.
-If you can't complete the bonus task, it's expected that you deliver a text explaining how you would solve the bonus task and how it fits into the solution you implemented, as well as be able to discuss it during the test review session.
-We recommend that you write up a few short paragraphs explaining the decisions you made during the implementation of your solution, as well as what you would have done differently if it was meant to be a production-ready project.
-Any questions you may have please contact us at backend-review@fidel.uk.
-
-## Context
-
-This test's main goal is to create a simplified version of the Offers API platform which allows customer's to connect brands (ex: Starbucks) with offers.
+This is a simplified version of an Offers API platform which allows customer's to connect brands (ex: Starbucks) with offers.
 _Example: Add 5% cashback offer to Starbucks Oxford street location_
-Feel free to browse our docs to familiarise yourself with our current [commercial offering](https://docs.fidel.uk/offers).
-**The solution must be written in Javascript or Typescript, deployable, testable and use the following tecnhologies:**
+**Using the following tecnhologies:**
 
 - AWS platform,
 - Lambda,
 - DynamoDB.
+### Overview
+- The project was developed in **NodeJs**, I used the framework **Serverless** to build the Lambda Application on AWS, it was created a setup to build an API through **API Gateway** platform, with **DynamoDB** and **Lambda**.
 
-You should take into consideration high request volume to the API and handle concurrency.
-We suggest that you use Serverless Framework and API Gateway.
-
-## Part 1
-
-Create a DynamoDB data model and insert the following simplified data into it:
-
-Offers
-
-```
-[{
-  name: "Super Duper Offer",
-  id: "d9b1d9ff-543e-47c7-895f-87f71dcad91b",
-  brandId: "692126c8-6e72-4ad7-8a73-25fc2f1f56e4",
-  locationsTotal: 0
-}]
-```
+- I also used some libs to build the application that are, **dotenv** to provide the same environment variables used on serverless, to be reached on our tests, and also **Jest** a lib to provide a test environment and tools to test our API.
 
 ---
 
-Locations
+### Setup
+- To reproduce this API in your AWS environment, you need to have AWS CLI installed on your OS, and the environment variables **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** with the respective values.
+- You also need **Serverless** framework installed in your OS, it can be done running `npm install -g serverless` ('How to' available on https://www.serverless.com/framework/docs/getting-started)
+
+- With all the requirements check, you can install the project running:
 
 ```
-[{
-  id: "03665f6d-27e2-4e69-aa9b-5b39d03e5f59",
-  address: "Address 1",
-  brandId: "692126c8-6e72-4ad7-8a73-25fc2f1f56e4"
-  hasOffer: false
-}, {
-  id: "706ef281-e00f-4288-9a84-973aeb29636e",
-  address: "Address 2",
-  brandId: "692126c8-6e72-4ad7-8a73-25fc2f1f56e4"
-  hasOffer: false
-}, {
-  id: "1c7a27de-4bbd-4d63-a5ec-2eae5a0f1870",
-  address: "Address 3",
-  brandId: "692126c8-6e72-4ad7-8a73-25fc2f1f56e4"
-  hasOffer: false
-}]
+npm install
+```
+And then, deploy and create it in your AWS running:
+```
+serverless deploy
 ```
 
-### Questions
+### Tests
 
-1. Have you ever used DynamoDb before?
-   - If not, how did you prepare for this task?
-   - If yes, which patterns did you learn in the past that you used here?
-2. How did you design your data model?
-3. What are the pros and cons of Dynamodb for an API request?
+- The application has 100% tests coverage, you can see it running `npx jest --coverage`
 
-## Part 2
+To run the tests, just run
+```
+npm run test
+```
+- There's many console logs on tests, to omit then you can run `npx jest --silent`
+---
 
-Create a Lambda function with an API endpoint that allows to link a location to an offer. The lambda should also increase the counter in the offer and mark the location with `hasOffer: true`.
+### Informations
+- The project is protected under an API KEY setted on **serverless.yml** file, that are **fideltest-key**. That was based on the same protection used on FidelAPI (Reference: https://reference.fidel.uk/reference#authentication), **fideltest-key** is supposed to be a unique key wranted for the customers of the application.
+Because of that API KEY, you must add the header **`x-api-key`** with value **`v3IPj3dPvT62rJYm3Ho7d2owPMxyYQ7x5kJNWcsH`** in all the requests that you would do to the API.
+- I shared my [Postman Collection](https://github.com/nicolaslima321/lambda-nodejs-api/tree/master/Postman%20Collection) used to develop the application, it contains all endpoints, headers, and body properly filled, it can help to test my API.
+- My production API is available on https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/
+- To simulate that offers creations always be made by the same publisher, i created an environment variable called DEFAULT_UUID, with an static UUID
+- I also created some endpoints that allow creation of offers, brands and locations
 
-### Questions
+### Endpoints
+The endpoints that have **{offerId}**, **{locationId}**, **{brandId}**, needs to be replaced to the current subject id at the url.
 
-1. Have you used Functions as a Service (FaaS) like AWS Lambda in the past?
-   - If not, how did you prepare for this task?
-   - If yes, how did this task compare to what you did?
-2. How do you write operations within a concurrent architecture (parallel requests, series of async actions, async mapReduce patterns, etc.)?
+- API Keys:
+```
+  fideltest-key (x-api-key): v3IPj3dPvT62rJYm3Ho7d2owPMxyYQ7x5kJNWcsH
+```
 
-## Bonus part
+- Brands
+```
+Creation
 
-Consider a brand like Starbucks that has more than 10000 locations, create a Lambda function that allows to link all the brand's locations to an offer.
+POST - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/brand
+- Body example:
+  {
+    "name": "Starbucks"
+  }
+```
 
-### Questions
+```
+Index
 
-If you cannot complete this part, please include a small text detailing your proposed solution, as well as the answers to the following questions:
+GET - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/brand
+```
 
-1. What challenges do you foresee/have experienced for this part?
-2. How would you handle operations that might take too long to complete (minutes instead of the typical endpoint ms range)?
-3. If something fails in the middle of this long operation, how would you handle the error and notify the client?
+```
+Show :ID
 
+GET - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/brand/{brandId}
+```
+
+- Offers
+```
+Creation
+
+POST - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/offer
+- Body example:
+  {
+    "name": "Super Duper Offer",
+    "brandId": "692126c8-6e72-4ad7-8a73-25fc2f1f56e4"
+  }
+```
+
+```
+Index
+
+GET - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/offer
+```
+
+```
+Show :ID
+
+GET - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}
+```
+
+```
+Link Offer to Locations
+
+POST - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}/link-location/{locationId}
+```
+
+```
+(BONUS) Link Offer to all locations from a brand
+
+POST - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}/link-all-brands-location/{brandId}
+```
+
+- Location
+
+```
+Creation
+
+POST - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/location
+- Body example:
+  {
+    "address": "Lorem Ipsum Address",
+    "brandId": "692126c8-6e72-4ad7-8a73-25fc2f1f56e4"
+  }
+```
+
+```
+Index
+
+GET - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/location
+```
+
+```
+Show :ID
+
+GET - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/location/{locationId}
+```
+
+- (BONUS) Link Offer to all locations from a brand
+
+```
+POST - https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}/link-all-brands-location/{brandId}
+```
+
+It notify the user at response when some of the links could not be performed.
+
+---
