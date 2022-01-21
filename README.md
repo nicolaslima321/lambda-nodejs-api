@@ -60,7 +60,7 @@ The endpoints that have **{offerId}**, **{locationId}**, **{brandId}**, needs to
 ```
 Creation
 
-POST - https://bla.execute-api.us-east-1.amazonaws.com/dev/brand
+POST - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/brand
 - Body example:
   {
     "name": "Starbucks"
@@ -70,20 +70,20 @@ POST - https://bla.execute-api.us-east-1.amazonaws.com/dev/brand
 ```
 Index
 
-GET - https://bla.execute-api.us-east-1.amazonaws.com/dev/brand
+GET - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/brand
 ```
 
 ```
 Show :ID
 
-GET - https://bla.execute-api.us-east-1.amazonaws.com/dev/brand/{brandId}
+GET - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/brand/{brandId}
 ```
 
 - Offers
 ```
 Creation
 
-POST - https://bla.execute-api.us-east-1.amazonaws.com/dev/offer
+POST - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/offer
 - Body example:
   {
     "name": "Super Duper Offer",
@@ -94,25 +94,25 @@ POST - https://bla.execute-api.us-east-1.amazonaws.com/dev/offer
 ```
 Index
 
-GET - https://bla.execute-api.us-east-1.amazonaws.com/dev/offer
+GET - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/offer
 ```
 
 ```
 Show :ID
 
-GET - https://bla.execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}
+GET - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}
 ```
 
 ```
 Link Offer to Locations
 
-POST - https://bla.execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}/link-location/{locationId}
+POST - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}/link-location/{locationId}
 ```
 
 ```
 (BONUS) Link Offer to all locations from a brand
 
-POST - https://bla.execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}/link-all-brands-location/{brandId}
+POST - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}/link-all-brands-location/{brandId}
 ```
 
 - Location
@@ -120,7 +120,7 @@ POST - https://bla.execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}/link-
 ```
 Creation
 
-POST - https://bla.execute-api.us-east-1.amazonaws.com/dev/location
+POST - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/location
 - Body example:
   {
     "address": "Lorem Ipsum Address",
@@ -131,19 +131,19 @@ POST - https://bla.execute-api.us-east-1.amazonaws.com/dev/location
 ```
 Index
 
-GET - https://bla.execute-api.us-east-1.amazonaws.com/dev/location
+GET - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/location
 ```
 
 ```
 Show :ID
 
-GET - https://bla.execute-api.us-east-1.amazonaws.com/dev/location/{locationId}
+GET - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/location/{locationId}
 ```
 
 - (BONUS) Link Offer to all locations from a brand
 
 ```
-POST - https://bla.execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}/link-all-brands-location/{brandId}
+POST - https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com/dev/offer/{offerId}/link-all-brands-location/{brandId}
 ```
 
 It notify the user at response when some of the links could not be performed.

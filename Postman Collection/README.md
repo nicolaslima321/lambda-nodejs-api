@@ -10,7 +10,7 @@ Im sharing the endpoint collection that i used through development, i hope it wi
 
 Theres some ENV keys to make things easier, you can store them as a environment postman variable, or just overwrite with the expected value
 
-**`{{AWS-API-URL}}`** - The URL of our API Gateway, from AWS, for example: **https://bla.execute-api.us-east-1.amazonaws.com**
+**`{{AWS-API-URL}}`** - The URL of our API Gateway, from AWS, for example: **https://6pkqjlxvu0execute-api.us-east-1.amazonaws.com**
 
 **`{{API-KEY}}`** - Is the API Key to protect our API, is available on `serverless.yml` file, but you just can fill it with **`v3IPj3dPvT62rJYm3Ho7d2owPMxyYQ7x5kJNWcsH`**
 
