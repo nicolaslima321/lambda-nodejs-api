@@ -42,10 +42,9 @@ npm run test
 ---
 
 ### Informations
-- The project is protected under an API KEY setted on **serverless.yml** file, that are **fideltest-key**. That was based on the same protection used on FidelAPI (Reference: https://reference.fidel.uk/reference#authentication), **fideltest-key** is supposed to be a unique key wranted for the customers of the application.
+- The project is protected under an API KEY setted on **serverless.yml** file, that are **api-key**. This **api-key** is supposed to be a unique key wranted for the customers of the application.
 Because of that API KEY, you must add the header **`x-api-key`** with value **`v3IPj3dPvT62rJYm3Ho7d2owPMxyYQ7x5kJNWcsH`** in all the requests that you would do to the API.
 - I shared my [Postman Collection](https://github.com/nicolaslima321/lambda-nodejs-api/tree/master/Postman%20Collection) used to develop the application, it contains all endpoints, headers, and body properly filled, it can help to test my API.
-- My production API is available on https://6pkqjlxvu0.execute-api.us-east-1.amazonaws.com/dev/
 - To simulate that offers creations always be made by the same publisher, i created an environment variable called DEFAULT_UUID, with an static UUID
 - I also created some endpoints that allow creation of offers, brands and locations
 
@@ -54,7 +53,7 @@ The endpoints that have **{offerId}**, **{locationId}**, **{brandId}**, needs to
 
 - API Keys:
 ```
-  fideltest-key (x-api-key): v3IPj3dPvT62rJYm3Ho7d2owPMxyYQ7x5kJNWcsH
+  api-key (x-api-key): v3IPj3dPvT62rJYm3Ho7d2owPMxyYQ7x5kJNWcsH
 ```
 
 - Brands

@@ -6,7 +6,7 @@ provider:
   name: aws
   apiGateway:
     apiKeys:
-      - name: fideltest-key
+      - name: api-key
         value: v3IPj3dPvT62rJYm3Ho7d2owPMxyYQ7x5kJNWcsH
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
