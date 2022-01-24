@@ -2,13 +2,9 @@
 
 ### Context
 
-This is a simplified version of an Offers API platform which allows customer's to connect brands (ex: Starbucks) with offers.
+This is a kinda off an Offers API platform which allows customer's to connect brands (ex: Starbucks) with offers.
 _Example: Add 5% cashback offer to Starbucks Oxford street location_
-**Using the following tecnhologies:**
 
-- AWS platform,
-- Lambda,
-- DynamoDB.
 ### Overview
 - The project was developed in **NodeJs**, I used the framework **Serverless** to build the Lambda Application on AWS, it was created a setup to build an API through **API Gateway** platform, with **DynamoDB** and **Lambda**.
 
